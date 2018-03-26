@@ -10,9 +10,10 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./main.obj" \
 "./startup_ccs.obj" \
-"./uart_echo.obj" \
-"./uartstdio/uartstdio.obj" \
+"./uart/uart_echo.obj" \
+"./uart/uartstdio.obj" \
 "../uart_echo_ccs.cmd" \
 $(GEN_CMDS__FLAG) \
 -llibc.a \
@@ -26,9 +27,9 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir_vars.mk
--include uartstdio/subdir_vars.mk
+-include uart/subdir_vars.mk
 -include subdir_rules.mk
--include uartstdio/subdir_rules.mk
+-include uart/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -160,8 +161,8 @@ uart_echo.bin: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "startup_ccs.obj" "uart_echo.obj" "uartstdio\uartstdio.obj" 
-	-$(RM) "startup_ccs.d" "uart_echo.d" "uartstdio\uartstdio.d" 
+	-$(RM) "main.obj" "startup_ccs.obj" "uart\uart_echo.obj" "uart\uartstdio.obj" 
+	-$(RM) "main.d" "startup_ccs.d" "uart\uart_echo.d" "uart\uartstdio.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

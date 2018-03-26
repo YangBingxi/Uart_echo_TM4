@@ -1,1 +1,1 @@
-"./startup_ccs.obj" "./uart_echo.obj" "./uartstdio/uartstdio.obj" "../uart_echo_ccs.cmd" -llibc.a -l"D:/ti/TivaWare_C_Series-2.1.4.178/driverlib/ccs/Debug/driverlib.lib" 
+"./main.obj" "./startup_ccs.obj" "./uart/uart_echo.obj" "./uart/uartstdio.obj" "../uart_echo_ccs.cmd" -llibc.a -l"D:/ti/TivaWare_C_Series-2.1.4.178/driverlib/ccs/Debug/driverlib.lib" 

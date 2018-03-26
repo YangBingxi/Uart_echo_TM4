@@ -35,7 +35,6 @@
 #include "driverlib/rom.h"
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
-
 //*****************************************************************************
 //
 //! \addtogroup example_list
@@ -48,21 +47,9 @@
 //
 //*****************************************************************************
 
-//*****************************************************************************
-//
-// The error routine that is called if the driver library encounters an error.
-//
-//*****************************************************************************
-#ifdef DEBUG
-void
-__error__(char *pcFilename, uint32_t ui32Line)
-{
-}
-#endif
-
 
 void
-UARTSend(uint8_t *pui8Buffer, uint32_t ui32Count);
+UART0Send(uint8_t *pui8Buffer, uint32_t ui32Count);
 uint8_t ReciveData[16];
 uint8_t ReciveData_i = 0;
 
@@ -119,7 +106,7 @@ UARTIntHandler(void)
     }
 
  //   UARTSend()
-    UARTSend(ReciveData, ReciveData_i);
+    UART0Send(ReciveData, ReciveData_i);
 }
 
 
@@ -129,7 +116,7 @@ UARTIntHandler(void)
 //
 //*****************************************************************************
 void
-UARTSend(uint8_t *pui8Buffer, uint32_t ui32Count)
+UART0Send(uint8_t *pui8Buffer, uint32_t ui32Count)
 {
     //
     // Loop while there are more characters to send.
@@ -150,7 +137,7 @@ UARTSend(uint8_t *pui8Buffer, uint32_t ui32Count)
 // uart0 init
 //
 //*****************************************************************************
-void UartIint(void)
+void Uart0Iint(void)
 {
     //
      // Enable the peripherals used by this example.
@@ -186,49 +173,6 @@ void UartIint(void)
      //
      // Prompt for text to be entered.
      //
-     UARTSend((uint8_t *)"\n UART Is OK!!\n\n ", 16);
+     UART0Send((uint8_t *)"\n UART Is OK!!\n\n ", 16);
 }
-
-//*****************************************************************************
-//
-// This example demonstrates how to send a string of data to the UART.
-//
-//*****************************************************************************
-int
-main(void)
-{
-    //
-    // Enable lazy stacking for interrupt handlers.  This allows floating-point
-    // instructions to be used within interrupt handlers, but at the expense of
-    // extra stack usage.
-    //
-    ROM_FPUEnable();
-    ROM_FPULazyStackingEnable();
-
-    //
-    // Set the clocking to run directly from the crystal.
-    //
-    ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
-
-    //
-    // Enable the GPIO port that is used for the on-board LED.
-    //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
-
-    //
-    // Enable the GPIO pins for the LED (PF2).
-    //
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);
-
-    UartIint();
-    //
-    // Loop forever echoing data through the UART.
-    //
-    while(1)
-    {
-
-    }
-}
-
-
 
