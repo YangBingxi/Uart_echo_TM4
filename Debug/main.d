@@ -16,6 +16,8 @@ main.obj: D:/ti/TivaWare_C_Series-2.1.4.178/driverlib/uart.h
 main.obj: ../uart/uart.h
 main.obj: ../uart/uartstdio.h
 main.obj: D:/Project_Program/Ccs_V7/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stdarg.h
+main.obj: D:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_types.h
+main.obj: D:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_gpio.h
 
 ../main.c: 
 D:/Project_Program/Ccs_V7/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stdint.h: 
@@ -33,3 +35,5 @@ D:/ti/TivaWare_C_Series-2.1.4.178/driverlib/uart.h:
 ../uart/uart.h: 
 ../uart/uartstdio.h: 
 D:/Project_Program/Ccs_V7/ccsv7/tools/compiler/ti-cgt-arm_16.9.6.LTS/include/stdarg.h: 
+D:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_types.h: 
+D:/ti/TivaWare_C_Series-2.1.4.178/inc/hw_gpio.h: 

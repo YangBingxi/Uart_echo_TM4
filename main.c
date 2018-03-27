@@ -37,7 +37,9 @@
 #include "driverlib/uart.h"
 #include "uart/uart.h"
 #include "uart/uartstdio.h"
-
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
+#include "inc/hw_gpio.h"
 //*****************************************************************************
 //
 //! \addtogroup example_list
@@ -77,25 +79,26 @@ main(void)
     // instructions to be used within interrupt handlers, but at the expense of
     // extra stack usage.
     //
-    ROM_FPUEnable();
-    ROM_FPULazyStackingEnable();
+    FPULazyStackingEnable();
+    FPUEnable();
 
     //
     // Set the clocking to run directly from the crystal.
     //
-    ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
+    SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
 
     //
     // Enable the GPIO port that is used for the on-board LED.
     //
-    ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
 
     //
     // Enable the GPIO pins for the LED (PF2).
     //
-    ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2);
+    GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_2|GPIO_PIN_1);
 
     Uart0Iint();
+    Uart1Iint();
     //
     // Loop forever echoing data through the UART.
     //

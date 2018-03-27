@@ -36,6 +36,8 @@
 #include "driverlib/sysctl.h"
 #include "driverlib/uart.h"
 #include "uart.h"
+
+
 //*****************************************************************************
 //
 //! \addtogroup example_list
@@ -173,11 +175,135 @@ void Uart0Iint(void)
      //
      // Prompt for text to be entered.
      //
-     UART0Send((uint8_t *)"\n UART Is OK!!\n\n ", 16);
+     UART0Send((uint8_t *)"\n UART0 Is OK!!\n\n ", 17);
 }
 
 
 
 /*---------------------------------------------------------------Beautiful Line---------------------------------------------------------*/
 
+//UART1
+uint8_t ReciveData_UART1[16];
+uint8_t ReciveData_i_UART1 = 0;
+
+
+//*****************************************************************************
+//
+// The UART interrupt handler.
+//
+//*****************************************************************************
+void
+UART1IntHandler(void)
+{
+    uint32_t ui32Status;
+    //
+    // Get the interrrupt status.
+    //
+    ui32Status = UARTIntStatus(UART1_BASE, true);
+
+    //
+    // Clear the asserted interrupts.
+    //
+    UARTIntClear(UART1_BASE, ui32Status);
+
+    ReciveData_i_UART1 = 0;
+    //
+    // Loop while there are characters in the receive FIFO.
+    //
+    while(UARTCharsAvail(UART1_BASE))
+    {
+        //
+        // Read the next character from the UART and write it back to the UART.
+        //
+//        UARTCharPutNonBlocking(UART1_BASE,
+//                                   UARTCharGetNonBlocking(UART1_BASE));
+
+        ReciveData_UART1[ReciveData_i_UART1] = UARTCharGetNonBlocking(UART1_BASE);
+        ReciveData_i_UART1++;
+        //
+        // Blink the LED to show a character transfer is occuring.
+        //
+        GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_PIN_1);
+
+        //
+        // Delay for 1 millisecond.  Each SysCtlDelay is about 3 clocks.
+        //
+        SysCtlDelay(SysCtlClockGet() / (1000 * 3));
+
+        //
+        // Turn off the LED
+        //
+        GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0);
+
+    }
+
+ //   UARTSend()
+    UART1Send(ReciveData_UART1, ReciveData_i_UART1);
+}
+
+
+//*****************************************************************************
+//
+// Send a string to the UART.
+//
+//*****************************************************************************
+void
+UART1Send(uint8_t *pui8Buffer, uint32_t ui32Count)
+{
+    //
+    // Loop while there are more characters to send.
+    //
+    while(ui32Count--)
+    {
+        //
+        // Write the next character to the UART.
+        //
+        UARTCharPutNonBlocking(UART1_BASE, *pui8Buffer++);
+    }
+}
+
+
+
+//*****************************************************************************
+//
+// uart1 init
+//
+//*****************************************************************************
+void Uart1Iint(void)
+{
+    //
+     // Enable the peripherals used by this example.
+     //
+     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART1);
+
+     //
+     // Enable processor interrupts.
+     //
+     IntMasterEnable();
+
+     //
+     // Set GPIO B0 and B1 as UART pins.
+     //
+     GPIOPinConfigure(GPIO_PB0_U1RX);
+     GPIOPinConfigure(GPIO_PB1_U1TX);
+     GPIOPinTypeUART(GPIO_PORTB_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+
+     //
+     // Configure the UART for 115,200, 8-N-1 operation.
+     //
+     UARTConfigSetExpClk(UART1_BASE, SysCtlClockGet(), 115200,
+                             (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE |
+                              UART_CONFIG_PAR_NONE));
+     //
+     // Enable the UART interrupt.
+     //
+     IntEnable(INT_UART1);
+     UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT);
+
+     //
+     // Prompt for text to be entered.
+     //
+     UART1Send((uint8_t *)"\n UART1 Is OK!!\n\n ", 17);
+}
 
